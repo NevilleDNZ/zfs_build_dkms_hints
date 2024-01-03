@@ -17,7 +17,7 @@ DESCRIPTION
     Basically, set:
       * Mode=Step # prompt before each command
       * Then (initially) manually "[1]Step" through each build command
-        - check for error tickled by your OSes quirks...
+        - check for error triggered by your OS's quirks...
       * Note: A copy of each command is logged into a zfs_build_script*.sh for manual review
         - prj_github/zfs_build_dkms_hints/zfs_build_script-z*-k5.14.0-162.23.1.el9_1.x86_64.sh
       * Then (finally) manually "[1]Step" through each build command
