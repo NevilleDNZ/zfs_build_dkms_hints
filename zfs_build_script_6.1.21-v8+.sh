@@ -1,11 +1,11 @@
 #!/bin/bash
 uname_m="aarch64"
 uname_r="6.1.21-v8+"
-zfs_r="2.1.9"
+zfs_r="2.1.14"
 sudo apt update -y
 sudo apt upgrade -y
-mkdir -p /home/builder/prj_github/zfs_build/zfs-k"$uname_r"
-cd /home/builder/prj_github/zfs_build/zfs-k"$uname_r"
+mkdir -p /home/nevilled/prj_github/zfs_build_dkms_hints/zfs-k"$uname_r"
+cd /home/nevilled/prj_github/zfs_build_dkms_hints/zfs-k"$uname_r"
 wget https://github.com/openzfs/zfs/releases/download/zfs-"$zfs_r"/zfs-"$zfs_r".tar.gz -O zfs-"$zfs_r".tar.gz
 tar -xzf zfs-"$zfs_r".tar.gz
 cd zfs-"$zfs_r"
