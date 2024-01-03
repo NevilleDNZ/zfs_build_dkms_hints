@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-#et -x
 if [ "/$1/" == "/--dkms/" ]; then
 cat << end_cat
 NAME
@@ -20,7 +19,7 @@ DESCRIPTION
       * Then (initially) manually "[1]Step" through each build command
         - check for error tickled by your OSes quirks...
       * Note: A copy of each command is logged into a zfs_build_script*.sh for manual review
-        - prj_github/zfs_build_dkms_hints/zfs_build_script_5.14.0-162.23.1.el9_1.x86_64.sh
+        - prj_github/zfs_build_dkms_hints/zfs_build_script-z*-k5.14.0-162.23.1.el9_1.x86_64.sh
       * Then (finally) manually "[1]Step" through each build command
          - Mode=Continue # to runn
 Initially tested on:
@@ -200,8 +199,8 @@ re_esc(){
 }
 
 if true; then
-# FORCE zfs_build.sh to create a targeted zfs_build_script_$uname_r.sh script instead
-   Script=$zfs_build_dir/zfs_build_script_$uname_r.sh
+# FORCE zfs_build.sh to create a targeted zfs_build_script-z$uname_r.sh script instead
+   Script=$zfs_build_dir/zfs_build_script-z"$zfs_r"-k"$uname_r".sh
    echo "#!/bin/bash" > $Script
    echo uname_m='"'"$(uname -m)"'"' >> $Script
    re_uname_m="$(echo $uname_m | re_esc )"
