@@ -124,7 +124,11 @@ TRACE0(){
     echo $PWD: Running: "$rev$@$sgr0";
     if [ "$Script" != "" ]; then
         echo Script:+= "$rev$@$sgr0"
-        echo "$@" | sed "s/$re_uname_r/$qq\$uname_r$qq/g; s/$re_uname_m/$qq\$uname_m$qq/g; s/$re_zfs_r/$qq\$zfs_r$qq/g" >> $Script
+        echo "$@" | sed "
+            s/$re_uname_r/$qq\$uname_r$qq/g;
+            s/$re_uname_m/$qq\$uname_m$qq/g;
+            s/$re_HOME/$qq\$HOME$qq/g;
+            s/$re_zfs_r/$qq\$zfs_r$qq/g" >> $Script
     fi
     "$@";
 }
@@ -192,7 +196,7 @@ zfs_uname_r="zfs-k$uname_r"
 zfs_build_dir="$HOME/prj_github/zfs_build_dkms_hints"
 
 re_esc(){
-    sed "s/[.*+]/[&]/g"
+    sed "s/[.*+]/[&]/g; s/\//\\\\&/g"
 }
 
 if true; then
@@ -203,6 +207,8 @@ if true; then
    re_uname_m="$(echo $uname_m | re_esc )"
    echo uname_r='"'"$(uname -r)"'"' >> $Script
    re_uname_r="$(echo $uname_r | re_esc )"
+   re_HOME="$(echo "$HOME" | re_esc )"
+   echo re_HOME="$re_HOME"
    echo zfs_r='"'"$zfs_r"'"' >> $Script
    re_zfs_r="$(echo $zfs_r | re_esc )"
 fi
