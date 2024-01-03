@@ -13,7 +13,7 @@ VERSION
 
 DESCRIPTION
     A simple "hack" to TRY and build zfs across a range of platforms.
-    Includes a crude Step/Skip/Continue shell-script line debugger.
+    Includes a crude Step/Skip/Continue shell-script line 'Mode' debugger.
 
     Basically, set:
       * Mode=Step # prompt before each command
@@ -30,6 +30,9 @@ Initially tested on:
 
 revisited:
   * pi4b14-rocky9-3-aarch64-4g 6.1.31-v8.1.el9.altarch
+
+HINTS
+   set variable 'Mode' to be one of "Step Skip Continue Shell Exit" to enable stepwise debugging.
 
 end_cat
 fi
@@ -57,6 +60,10 @@ Mode=Continue
 Mode_l="Step Skip Continue Shell Exit"
 
 #Mode=Step # QQQ move this line to the beginning or end to enable/disable line debugging!! :-) #
+
+tput(){
+    false # skip text highlighting
+}
 
 bold=`tput bold`
 rev=`tput rev`
