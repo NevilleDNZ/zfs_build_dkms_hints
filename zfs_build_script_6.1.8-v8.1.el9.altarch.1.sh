@@ -3,14 +3,14 @@ uname_m="aarch64"
 uname_r="6.1.8-v8.1.el9.altarch.1"
 zfs_r="2.1.9"
 sudo dnf update -y
-mkdir -p /home/nevilled/prj_ng/zfs_build/zfs-k"$uname_r"
-cd /home/nevilled/prj_ng/zfs_build/zfs-k"$uname_r"
+mkdir -p /home/builder/prj_github/zfs_build/zfs-k"$uname_r"
+cd /home/builder/prj_github/zfs_build/zfs-k"$uname_r"
 sudo dnf install -y yum-utils
 sudo yumdownloader --source libtirpc
 sudo dnf install -y krb5-devel
 sudo dnf install -y rpm-build autoconf automake libtool
 rpmbuild -ra libtirpc-1.3.3-0.el9.src.rpm
-sudo dnf install -y /home/nevilled/rpmbuild/RPMS/"$uname_m"/libtirpc-devel-1.3.3-0.el9."$uname_m".rpm
+sudo dnf install -y /home/builder/rpmbuild/RPMS/"$uname_m"/libtirpc-devel-1.3.3-0.el9."$uname_m".rpm
 wget https://github.com/openzfs/zfs/releases/download/zfs-"$zfs_r"/zfs-"$zfs_r".tar.gz -O zfs-"$zfs_r".tar.gz
 tar -xzf zfs-"$zfs_r".tar.gz
 cd zfs-"$zfs_r"
