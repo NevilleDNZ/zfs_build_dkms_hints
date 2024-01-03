@@ -3,10 +3,13 @@
 if [ "/$1/" == "/--dkms/" ]; then
 cat << end_cat
 NAME
-    zfs_build-0.6.sh
+    zfs_build.sh
 
 SYNOPSIS
-    zfs_build-0.6.sh # options set internally with OPT_ env variables
+    zfs_build.sh # options set internally with OPT_ env variables
+
+VERSION
+    zfs_build_0.7.sh
 
 DESCRIPTION
     A simple "hack" to TRY and build zfs across a range of platforms.
@@ -14,21 +17,24 @@ DESCRIPTION
 
     Basically, set:
       * Mode=Step # prompt before each command
-      * Then (initially) manually "[1]Step" through each build command 
+      * Then (initially) manually "[1]Step" through each build command
         - check for error tickled by your OSes quirks...
       * Note: A copy of each command is logged into a zfs_build_script*.sh for manual review
-        - prj_ng/zfs_build/zfs_build_script_5.14.0-162.23.1.el9_1.x86_64.sh
-      * Then (finally) manually "[1]Step" through each build command 
+        - prj_github/zfs_build_dkms_hints/zfs_build_script_5.14.0-162.23.1.el9_1.x86_64.sh
+      * Then (finally) manually "[1]Step" through each build command
          - Mode=Continue # to runn
 Initially tested on:
   * RHEL9.1 - 5.14.0-162.23.1.el9_1.x86_64
   * RaspberrryPi/Debian 6.1.21-v8+
   * rocky9-1-aarch64 6.1.8-v8.1.el9.altarch.1
 
+revisited:
+  * pi4b14-rocky9-3-aarch64-4g 6.1.31-v8.1.el9.altarch
+
 end_cat
 fi
 
-zfs_r=2.1.9 # stable?
+zfs_r=2.1.14 # stable?
 
 # if false; for 2.1.99
 if true; then
@@ -60,7 +66,7 @@ PKG_MGR=dnf
 for mgr in dnf apt yum; do
     if [ -f "/usr/bin/$mgr" ]; then
         PKG_MGR=$mgr
-	break
+	    break
     fi
 done
 
@@ -117,7 +123,7 @@ TRACE0(){
 }
 
 EXCEPTION(){
-    echo Exception: "$cmd" 
+    echo Exception: "$cmd"
     sleep 6
     exit
 }
@@ -131,7 +137,7 @@ TRACE(){
 	    # echo "$@"
 	    PS3="Next [$bold$*$sgr0]? Enter option nr.: "
 	    select opt_Mode in $Mode_l; do
-		case "$opt_Mode" in 
+		case "$opt_Mode" in
 		    (Skip) echo Skip; break;;
 		    (Continue)
 			Mode=Continue
@@ -147,7 +153,7 @@ TRACE(){
 }
 
 NEWEST(){
-    ls -dt "$*" | head -1
+    ls -dt "$@" | head -1
 }
 
 eval `cat /etc/os-release`
@@ -176,14 +182,14 @@ end_rhel91
 #platform="$ID$VERSION_ID"
 zfs_uname_r="zfs-k$uname_r"
 
-zfs_build_dir="$HOME/prj_ng/zfs_build"
+zfs_build_dir="$HOME/prj_github/zfs_build_dkms_hints"
 
 re_esc(){
     sed "s/[.*+]/[&]/g"
 }
 
 if true; then
-# FORCE zfs_build.sh to create a targeted zfs_build_script_$uname_r.sh scipt instead
+# FORCE zfs_build.sh to create a targeted zfs_build_script_$uname_r.sh script instead
    Script=$zfs_build_dir/zfs_build_script_$uname_r.sh
    echo "#!/bin/bash" > $Script
    echo uname_m='"'"$(uname -m)"'"' >> $Script
@@ -216,7 +222,7 @@ TRACE0 cd $zfs_build_dir/$zfs_uname_r || EXCEPTION
 
 # libtirpc-devel is missing from RHEL...
 if [ "$PKG_MGR" == "yum" -o "$PKG_MGR" == "dnf" ]; then
-    
+
     TRACE $PKG_INSTALL yum-utils
     TRACE sudo yumdownloader --source libtirpc
 
@@ -320,10 +326,10 @@ https://openzfs.github.io/openzfs-docs/Getting%20Started/index.html
 
 === Raspberry Pi OS for arm64 ===
 Seems to work with DKMS:
-    cd ~/prj_ng/zfs_build/zfs-6.1.21-v8+/zfs-2.1.9 &&
+    cd ~/prj_github/zfs_build_dkms_hints/zfs-6.1.21-v8+/zfs-2.1.9 &&
     sudo apt install ./{zfs,zfs-dkms,libnvpair3,libuutil3,libzfs5,libzpool5}_2.1.9-1_arm64.deb &&
     exec init 6 # test: df -PhT
-    
+
 === RockLinux 9.1 for aarch64 ===
     sudo dnf install dkms
 
@@ -341,4 +347,4 @@ fi
 
 # sed -i.raw "s/$uname_r/"\$uname_r"/g" $SCRIPT
 
-#TRACE exec sudo init 6 # to test new module
+#TRACE exec sudo init 6 # to test new module\
