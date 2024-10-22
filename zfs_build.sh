@@ -8,7 +8,7 @@ SYNOPSIS
     zfs_build.sh # options set internally with OPT_ env variables
 
 VERSION
-    zfs_build_0.7.sh
+    zfs_build-x.x.x.sh
 
 DESCRIPTION
     A simple "hack" to TRY and build zfs across a range of platforms.
