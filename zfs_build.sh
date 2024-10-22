@@ -8,7 +8,7 @@ SYNOPSIS
     zfs_build.sh # options set internally with OPT_ env variables
 
 VERSION
-    zfs_build_0.7.sh
+    zfs_build-x.x.x.sh
 
 DESCRIPTION
     A simple "hack" to TRY and build zfs across a range of platforms.
@@ -193,6 +193,8 @@ end_rhel91
 zfs_uname_r="zfs-k$uname_r"
 
 zfs_build_dir="$HOME/prj_github/zfs_build_dkms_hints"
+zfs_build_dir="$HOME/prj_github/zfs_build_dkms_hints-downstream"
+zfs_build_dir="$PWD"
 
 re_esc(){
     sed "s/[.*+]/[&]/g; s/\//\\\\&/g"
@@ -236,6 +238,10 @@ TRACE0 cd $zfs_build_dir/$zfs_uname_r || EXCEPTION
 if [ "$PKG_MGR" == "yum" -o "$PKG_MGR" == "dnf" ]; then
 
     TRACE $PKG_INSTALL yum-utils
+# IF you get "$USER is not in the sudoers file.  This incident will be reported."
+# THEN add:
+# ==> /etc/sudoers.d/$USER <==
+# $USER ALL=(ALL:ALL) NOPASSWD: ALL
     TRACE sudo yumdownloader --source libtirpc
 
     TRACE $PKG_INSTALL krb5$_DEVEL
@@ -243,6 +249,7 @@ if [ "$PKG_MGR" == "yum" -o "$PKG_MGR" == "dnf" ]; then
     #TRACE rpmbuild -ra libtirpc-1.3.3-0.el9.src.rpm
     TRACE rpmbuild -ra `NEWEST libtirpc-*.src.rpm`
     #TRACE $PKG_INSTALL `NEWEST ~/rpmbuild/RPMS/x86_64/libtirpc-devel-1.3.3-0.el9.x86_64.rpm`
+    TRACE $PKG_INSTALL `NEWEST ~/rpmbuild/RPMS/$uname_m/libtirpc-*.$uname_m.rpm`
     TRACE $PKG_INSTALL `NEWEST ~/rpmbuild/RPMS/$uname_m/libtirpc$_DEVEL-*.$uname_m.rpm`
 fi
 
@@ -264,7 +271,6 @@ case "$OPT_GET" in
 	tarball=`basename $ZFS_TAR`
         TRACE $OPT_GET $ZFS_TAR -O $tarball
         TRACE tar -xzf $tarball
-	pwd; ls -l
         TRACE0 cd zfs-$zfs_r || EXCEPTION
     ;;
 esac
@@ -293,6 +299,7 @@ if [ "$PKG_MGR" == "yum" -o "$PKG_MGR" == "dnf" ]; then
 # TRACE $PKG_INSTALL gcc make autoconf automake libtool rpm-build libblkid-devel libuuid-devel libudev-devel openssl-devel zlib-devel libaio-devel libattr-devel elfutils-libelf-devel kernel-devel-$uname_r python3 python3-devel python3-setuptools python3-cffi libffi-devel libcurl-devel python3-packaging
 
     TRACE $PKG_INSTALL $kernel_devel
+    TRACE $PKG_INSTALL -y epel-release
     TRACE $PKG_INSTALL gcc make autoconf automake libtool dkms \
         python3{,-cffi,-packaging,-setuptools} \
         {python3,openssl,elfutils-libelf,zlib}$_DEVEL \
@@ -302,7 +309,7 @@ else
     TRACE $PKG_INSTALL $kernel_devel
     TRACE $PKG_INSTALL gcc make autoconf automake libtool dkms \
         python3{,-cffi,-packaging,-setuptools} \
-	{python3,uuid,zlib1g}$_DEVEL \
+	    {python3,uuid,zlib1g}$_DEVEL \
         lib{aio,attr1,blkid,curl4-openssl,elf,ffi,ssl,udev}$_DEVEL
 fi
 
@@ -353,10 +360,25 @@ https://www.tecmint.com/install-epel-repo-rhel-9/
 # https://openzfs.github.io/openzfs-docs/Getting%20Started/RHEL-based%20distro/index.html
 dnf install https://zfsonlinux.org/epel/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
 
+=== Install the EPEL Release Package ===
+
+The epel-release package contains the necessary repository configuration files and GPG keys to enable EPEL.
+Option A: Install Directly Using DNF
+
+Rocky Linux 9 includes the epel-release package in its repositories. Install it using:
+# sudo dnf install -y epel-release
+
+Option B: Install Using the EPEL Release RPM
+If Option A doesn't work, you can manually install the EPEL release package from the Fedora project's repository.
+
+Download and Install the EPEL Release Package:
+# sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+    The noarch in the package name indicates that it is architecture-independent and suitable for all architectures, including aarch64.
 end_cat
    exit 1
 fi
 
 # sed -i.raw "s/$uname_r/"\$uname_r"/g" $SCRIPT
 
-#TRACE exec sudo init 6 # to test new module\
+#TRACE exec sudo init 6 # to test new module
