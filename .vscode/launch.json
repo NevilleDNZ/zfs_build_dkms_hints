@@ -7,8 +7,21 @@
         {
             "type": "bashdb",
             "request": "launch",
-            "name": "Bash-Debug (simplest configuration)",
-            "program": "${file}"
+            "name": "Bash-Debug Current File - stdio integrated",
+            "cwd": "${workspaceFolder}",
+            "program": "${file}",
+            // "args0": ["__WRAP_UPSTREAM=yes", "PRJ_UPSTREAM=zfs_build_dkms_hints", "setup"],
+            // "args1": [],
+            "args": ["update","release"],
+            "terminalKind": "integrated"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
