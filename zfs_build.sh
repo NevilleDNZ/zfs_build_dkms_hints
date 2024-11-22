@@ -37,6 +37,7 @@ end_cat
 fi
 
 zfs_r=2.1.14 # stable?
+zfs_r=2.2.6 # stable
 
 # if false; for 2.1.99
 if true; then
