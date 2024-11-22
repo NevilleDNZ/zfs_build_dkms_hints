@@ -1,3 +1,5 @@
 q.*
 q_*
 typescript
+*.src.rpm
+zfs-*/zfs-*
