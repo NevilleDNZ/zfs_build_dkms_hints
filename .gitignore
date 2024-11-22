@@ -3,5 +3,6 @@ q_*
 typescript
 *.src.rpm
 *.tar
+*.tar.gz
 *.tgz
 zfs-*/zfs-*
